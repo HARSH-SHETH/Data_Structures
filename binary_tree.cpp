@@ -28,8 +28,10 @@ class TREE{
     void insert_tree(node*);
     int* preorder(void);
     int* inorder(void);
+    int* postorder(void);
 };
 
+//INSERT ITEMS INTO THE BINARY TREE
 void TREE::insert_tree(node *item){
   if (root == NULL){
     root = item;
@@ -102,6 +104,10 @@ int* TREE::inorder(void){
   return inorder_tree;
 }
 
+// RETURN AN ARRAY CONTAINING POSTORDER
+int* TREE::postorder(void){
+}
+
 // MAIN
 int main(){
   int info;
@@ -115,5 +121,6 @@ int main(){
   }
   print_array(T.preorder(), T.get_no_of_items(), "Preorder is: ");
   print_array(T.inorder(), T.get_no_of_items(), "Inorder is: ");
+  print_array(T.postorder(), T.get_no_of_items(), "Postorder is: ");
   return 0;
 }
