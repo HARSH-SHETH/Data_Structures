@@ -8,6 +8,14 @@ struct node{
   int info;
 };
 
+void print_array(int *arr, int size, string msg){
+  cout << "\n" << msg;
+  for(int i = 0; i < size; i++){
+    cout << arr[i];
+    if (i != size-1)  cout << ", ";
+  }
+}
+
 class TREE{
   private: 
     node *root;
@@ -19,6 +27,7 @@ class TREE{
     int get_no_of_items(void){ return no_of_items; }
     void insert_tree(node*);
     int* preorder(void);
+    int* inorder(void);
 };
 
 void TREE::insert_tree(node *item){
@@ -73,9 +82,6 @@ int main(){
     T.insert_tree(item);
   }
   int *preorder = T.preorder();
-  cout << "\n";
-  for(int i = 0; i <= T.get_no_of_items()-1; i++){
-    cout << preorder[i] << ", ";
-  }
+  print_array(preorder, T.get_no_of_items(), "Preorder is: ");
   return 0;
 }
