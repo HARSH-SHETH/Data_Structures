@@ -81,7 +81,6 @@ int main(){
     item->right = NULL;
     T.insert_tree(item);
   }
-  int *preorder = T.preorder();
-  print_array(preorder, T.get_no_of_items(), "Preorder is: ");
+  print_array(T.preorder(), T.get_no_of_items(), "Preorder is: ");
   return 0;
 }
