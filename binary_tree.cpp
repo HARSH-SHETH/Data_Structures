@@ -52,6 +52,7 @@ void TREE::insert_tree(node *item){
   no_of_items++;
 }
 
+// RETURN AN ARRAY CONTAINING PREORDER
 int* TREE::preorder(void){
   int *preorder_tree = new int[no_of_items-1];
   int index = -1;
@@ -71,6 +72,37 @@ int* TREE::preorder(void){
   }
   return preorder_tree;
 }
+
+// RETURN AN ARRAY CONTAINING INORDER
+int* TREE::inorder(void){
+  int *inorder_tree = new int[get_no_of_items()-1];
+  int index = -1;
+  stack_tree[++top] = NULL;
+  node *ptr = new node;
+  ptr = root;
+  while(ptr != NULL){
+    while(ptr != NULL){
+      stack_tree[++top] = ptr;
+      ptr = ptr->left;
+    }
+    do{
+      ptr = stack_tree[top--];
+      if(ptr != NULL){
+        inorder_tree[++index] = ptr->info;
+      }else{
+        break;
+      }
+    }while(ptr->right == NULL && ptr != NULL);
+    if(ptr != NULL){
+      if(ptr->right != NULL){ 
+        ptr = ptr->right;
+      }
+    }
+  }
+  return inorder_tree;
+}
+
+// MAIN
 int main(){
   int info;
   TREE T;
@@ -82,5 +114,6 @@ int main(){
     T.insert_tree(item);
   }
   print_array(T.preorder(), T.get_no_of_items(), "Preorder is: ");
+  print_array(T.inorder(), T.get_no_of_items(), "Inorder is: ");
   return 0;
 }
