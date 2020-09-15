@@ -106,6 +106,29 @@ int* TREE::inorder(void){
 
 // RETURN AN ARRAY CONTAINING POSTORDER
 int* TREE::postorder(void){
+  int *postorder_tree = new int[get_no_of_items()-1];
+  int index = -1;
+  int sign[get_no_of_items()-1];
+  sign[0] = 0;
+  stack_tree[++top] = NULL;
+  node *ptr = new node;
+  ptr = root;
+  while(ptr != NULL){
+    while(ptr != NULL){
+      stack_tree[++top] = ptr;
+      sign[top] = 1;
+      if(ptr->right != NULL){
+        stack_tree[++top] = ptr->right;
+        sign[top] = -1;
+      }
+      ptr = ptr->left;
+    }
+    while(sign[top] > 0){
+      postorder_tree[++index] = stack_tree[top--]->info;
+    }
+    if(sign[top] < 0) ptr = stack_tree[top--];
+  }
+  return postorder_tree;
 }
 
 // MAIN
