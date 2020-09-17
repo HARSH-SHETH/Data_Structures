@@ -9,6 +9,10 @@ struct node{
 };
 
 void print_array(int *arr, int size, string msg){
+  if(size <= 0 || arr == NULL){ 
+    cout << "\nEmpty Tree: ";
+    return;
+  }
   cout << "\n" << msg;
   for(int i = 0; i < size; i++){
     cout << arr[i];
@@ -24,11 +28,16 @@ class TREE{
     int top;
   public: 
     TREE(): root{NULL}, no_of_items{0}, top{-1} {}
+    bool is_tree_empty() { return (root == NULL) ? true : false;}
     int get_no_of_items(void){ return no_of_items; }
     void insert_tree(node*);
     int* preorder(void);
     int* inorder(void);
     int* postorder(void);
+    node* find_node(int);
+    node* find_parent(int);
+    node* find_inorder_suc(node*);
+    void delete_node(node*);
 };
 
 //INSERT ITEMS INTO THE BINARY TREE
@@ -56,6 +65,9 @@ void TREE::insert_tree(node *item){
 
 // RETURN AN ARRAY CONTAINING PREORDER
 int* TREE::preorder(void){
+  if(get_no_of_items() == 0){
+    return NULL;
+  }
   int *preorder_tree = new int[no_of_items-1];
   int index = -1;
   stack_tree[++top] = NULL;
@@ -77,6 +89,9 @@ int* TREE::preorder(void){
 
 // RETURN AN ARRAY CONTAINING INORDER
 int* TREE::inorder(void){
+  if(get_no_of_items() == 0){
+    return NULL;
+  }
   int *inorder_tree = new int[get_no_of_items()-1];
   int index = -1;
   stack_tree[++top] = NULL;
@@ -106,6 +121,9 @@ int* TREE::inorder(void){
 
 // RETURN AN ARRAY CONTAINING POSTORDER
 int* TREE::postorder(void){
+  if(get_no_of_items() == 0){
+    return NULL;
+  }
   int *postorder_tree = new int[get_no_of_items()-1];
   int index = -1;
   int sign[get_no_of_items()-1];
@@ -131,11 +149,94 @@ int* TREE::postorder(void){
   return postorder_tree;
 }
 
+// FIND A NODE AN RETURN ITS ADDRESS
+node* TREE::find_node(int item){
+  if(root == NULL){
+    cout << "Go Make A Tree First";
+    return NULL;
+  }
+  node *ptr = new node;
+  ptr = root;
+  while(ptr != NULL){
+    if(item == ptr->info) return ptr;
+    if(item < ptr->info){
+      ptr = ptr->left;
+    }else{
+      ptr = ptr->right;
+    }
+  }
+  return NULL;
+}
+
+// FIND A NODE AN RETURN ITS PARENT'S ADDRESS
+node* TREE::find_parent(int item){
+  node *ptr = new node;
+  node *parent = new node;
+  ptr = root;
+  parent = NULL;
+  while(ptr != NULL){
+    if(item == ptr->info) return parent;
+    parent = ptr;
+    if(item < ptr->info){
+      ptr = ptr->left;
+    }else{
+      ptr = ptr->right;
+    }
+  }
+  return NULL;
+}
+
+// DELETE THE SPECIFIED NODE
+void TREE::delete_node(node *ptr){
+  node *parent = find_parent(ptr->info);
+  if(ptr->left != NULL && ptr->right != NULL){
+    node *SUC = new node;
+    SUC = find_inorder_suc(ptr);
+    int save = SUC->info;
+    delete_node(SUC);
+    ptr->info = save;
+  }else{
+    if(parent == NULL){
+      if(ptr->left != NULL){
+        root = ptr->left;
+      }else{
+        root = ptr->right;
+      }
+      no_of_items--;  // DECREMENT ONLY WHEN NODE HAS ONE OR ZERO CHILD;
+      return;
+    }
+    node *child = new node;
+    if(ptr->left != NULL){
+      child = ptr->left;
+    }else{
+      child = ptr->right;
+    }
+    if(parent->left == ptr){
+      parent->left = child;
+    }else{
+      parent->right = child;
+    }
+    no_of_items--;  // DECREMENT ONLY WHEN NODE HAS ONE OR ZERO CHILD;
+  }
+  return;
+}
+
+// FIND THE INORDER SUCCESSOR OF THE CURRENT NODE
+node* TREE::find_inorder_suc(node* ptr){
+  node *SUC = new node;
+  SUC = ptr->right;
+  while(SUC->left != NULL){
+    SUC = SUC->left;
+  }
+  cout << "inorder succesor is: " << SUC->info;
+  return SUC;
+}
+
 // MAIN
 int main(){
   int info;
   TREE T;
-  while(cin >> info){
+  while(cin >> info && info != -1){
     node *item = new node;
     item->info = info;
     item->left = NULL;
@@ -145,5 +246,24 @@ int main(){
   print_array(T.preorder(), T.get_no_of_items(), "Preorder is: ");
   print_array(T.inorder(), T.get_no_of_items(), "Inorder is: ");
   print_array(T.postorder(), T.get_no_of_items(), "Postorder is: ");
+  while(true){
+    if(T.is_tree_empty()) {
+      cout << "\nTree has been cut, plant a new one";
+      return -1;
+    }
+    cout << "\nEnter any item to be searched";
+    cin >> info;
+    node* item = T.find_node(info);
+    if(item != NULL) {
+      cout << "\nItem Found";
+      if(T.find_parent(info) != NULL){
+        cout << "\t Parent Node: " << T.find_parent(info)->info;
+      }else{
+        cout << "\tRoot of the Tree";
+      }
+    }else cout << "\nItem Not Found";
+    T.delete_node(item);
+    print_array(T.inorder(), T.get_no_of_items(), "Inorder is: ");
+  }
   return 0;
 }
