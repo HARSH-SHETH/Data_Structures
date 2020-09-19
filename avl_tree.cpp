@@ -1,9 +1,3 @@
-                 _       _         _          _       _     _   
- _   _ _ __   __| | __ _| |_ ___  | |__   ___(_) __ _| |__ | |_ 
-| | | | '_ \ / _` |/ _` | __/ _ \ | '_ \ / _ \ |/ _` | '_ \| __|
-| |_| | |_) | (_| | (_| | ||  __/ | | | |  __/ | (_| | | | | |_ 
- \__,_| .__/ \__,_|\__,_|\__\___| |_| |_|\___|_|\__, |_| |_|\__|
-      |_|                                       |___/           
 #include <iostream>
 #define MAXSIZE 100
 using namespace std;
@@ -25,6 +19,7 @@ class AVL_TREE{
   public: 
     AVL_TREE(): root{NULL}, no_of_items{0}, top{-1} {}
     int get_no_of_items() { return no_of_items; }
+    int max(int a, int b) { return (a > b) ? a : b; }
     void insert_tree(node*);
     void balance_tree(node*);
     int get_bf(node* ptr) { return get_height(ptr->left) - get_height(ptr->right); }
@@ -49,6 +44,7 @@ class AVL_TREE{
 
 //INSERT ITEMS INTO THE BINARY TREE
 void AVL_TREE::insert_tree(node *item){
+  stack_tree[++top] = NULL;
   if (root == NULL){
     root = item;
   }else{
@@ -57,6 +53,7 @@ void AVL_TREE::insert_tree(node *item){
     temp = root;
     while(temp != NULL){
       save = temp;
+      stack_tree[++top] = temp;
       if (item->info < temp->info)
         temp = temp->left;
       else
@@ -66,8 +63,14 @@ void AVL_TREE::insert_tree(node *item){
       save->left = item;
     else if(item->info > save->info)
       save->right = item;
-    else 
+    else {
+      top = -1;
       return;
+    }
+    while((temp = stack_tree[top--]) != NULL){
+      temp->height = max(get_height(temp->left), get_height(temp->right)) + 1;
+    }
+    top = -1;
   }
   no_of_items++;
   balance_tree(item);
@@ -133,6 +136,26 @@ void AVL_TREE::left_rotation(node *pivot_node, node *parent_node){
   pivot_node->right = save->left;
   save->left = pivot_node;
   if(parent_node == NULL) { root = save; }
+  pivot_node->height = max(get_height(pivot_node->left), get_height(pivot_node->right)) + 1;
+  save->height = max(get_height(save->left), get_height(save->right)) + 1;
+  return;
+}
+
+// ROTATE THE SUB-TREE CLOCKWISE AROUND PIVOT NODE
+void AVL_TREE::right_rotation(node *pivot_node, node *parent_node){
+  if(parent_node != NULL){
+    if(parent_node->left == pivot_node){
+      parent_node->left = pivot_node->left;
+    }else{
+      parent_node->right = pivot_node->left;
+    }
+  }
+  node *save = pivot_node->left;
+  pivot_node->left = save->right;
+  save->right = pivot_node;
+  if(parent_node == NULL) { root = save; }
+  pivot_node->height = max(get_height(pivot_node->left), get_height(pivot_node->right)) + 1;
+  save->height = max(get_height(save->left), get_height(pivot_node->right)) + 1;
   return;
 }
 
@@ -171,22 +194,6 @@ node* AVL_TREE::find_parent(int item){
     }
   }
   return NULL;
-}
-
-// ROTATE THE SUB-TREE CLOCKWISE AROUND PIVOT NODE
-void AVL_TREE::right_rotation(node *pivot_node, node *parent_node){
-  if(parent_node != NULL){
-    if(parent_node->left == pivot_node){
-      parent_node->left = pivot_node->left;
-    }else{
-      parent_node->right = pivot_node->left;
-    }
-  }
-  node *save = pivot_node->left;
-  pivot_node->left = save->right;
-  save->right = pivot_node;
-  if(parent_node == NULL) { root = save; }
-  return;
 }
 
 // PRINT ARRAY 
@@ -294,6 +301,8 @@ int main(){
   while(cin >> info && info != -1){
     T.insert_tree(T.get_node(info));
   }
-  T.print_array(T.inorder(), T.get_no_of_items(), "INORDER IS: ");
+  T.print_array(T.preorder(), T.get_no_of_items(), "PREORDER IS: ");
+  T.print_array(T.inorder(), T.get_no_of_items(), "Inorder is: ");
+  T.print_array(T.postorder(), T.get_no_of_items(), "Postorder is: ");
   return 0;
 }
