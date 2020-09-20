@@ -36,4 +36,4 @@ During massive floods it is risky to send <em>human-help</em> via water-boats fo
         |_|   |_|                                    
 
 To understand it's basic application let us suppose a situation of a flooded village in which some people are stuck. Instead of doing a manual search rescue teams can employ this drone for surveillance of the region. 
-This drone will trace people by Omnidirectional Camera and Thermographic Sensor. 
+While surveying(using Omnidirectional Camera and Thermographic Sensor) if the operator finds a person it can record the co-ordinates of the person through inbuilt GPS-tracker and send the rescue team to the area. Meanwhile the operator can talk to the stranded person and encourage him to stay relieved. 
