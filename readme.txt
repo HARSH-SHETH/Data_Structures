@@ -46,5 +46,9 @@ This drone would be highly effective at night-time operations in flooded areas.
 |_|   \__,_|\__|\__,_|_|  \___|
  
 In future we can add claw like structure to the drone so that it can hold necessities like floating rings, food packets etc. 
+<<<<<<< HEAD
 
 Changes added in master branch
+=======
+Changes committed in experiment branch. 
+>>>>>>> experiment
