@@ -47,3 +47,5 @@ This drone would be highly effective at night-time operations in flooded areas.
  
 In future we can add claw like structure to the drone so that it can hold necessities like floating rings, food packets etc. 
 Git diff in action
+
+Git diff in action again with commit.
