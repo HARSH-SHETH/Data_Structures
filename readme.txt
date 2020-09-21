@@ -50,4 +50,4 @@ Git diff in action
 
 Git diff in action again with commit.
 Git amend in action now.
-git reset be careful using these
+Git in action here also
