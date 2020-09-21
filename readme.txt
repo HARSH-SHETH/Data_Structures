@@ -50,3 +50,4 @@ Git diff in action
 
 Git diff in action again with commit.
 Git amend in action now.
+Git in action here also
