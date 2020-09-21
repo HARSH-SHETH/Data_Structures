@@ -49,3 +49,4 @@ In future we can add claw like structure to the drone so that it can hold necess
 Git diff in action
 
 Git diff in action again with commit.
+Git amend in action now.
