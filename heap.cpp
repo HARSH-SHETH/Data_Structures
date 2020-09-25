@@ -40,13 +40,13 @@ void HEAP::insert_heap(int key){
     return;
   }
   int ptr = current_node;
-
   heap[ptr] = key;
   int parent;
   if((parent = get_parent(ptr)) == ERROR_STATUS) { return; }
   while(heap[ptr] > heap[parent]){
     swap_heap(ptr, parent);
     parent = get_parent(ptr = parent);
+    if(parent == ERROR_STATUS) { break; }
   }
   print_heap(heap, current_node+1, "current heap is: ");
   return;
@@ -85,7 +85,7 @@ int HEAP::delete_heap(int loc){
       swap_heap(loc, left);
     }
   }
-/*  print_heap(heap, current_node+1, "Updated Heap is: "); */
+  print_heap(heap, current_node+1, "Updated Heap is: "); 
   return save;
 }
 
@@ -102,8 +102,8 @@ int main(){
     cout << H.delete_heap(num);
     cout << "Enter loc to be deleted: ";
   }
-/*  cout << "wtf";
+  cout << "wtf";
   int n = 5;
-  cout << n;*/
+  cout << n;
   return 0;
 }

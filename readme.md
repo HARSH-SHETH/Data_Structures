@@ -3,3 +3,4 @@
 ### 1. **`Trees`**
   * `Binary Trees { Preorder, Inorder, Postorder }`
   * `AVL Trees`
+  * `Heap, Heapsort`
