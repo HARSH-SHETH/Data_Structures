@@ -6,3 +6,4 @@
   * `Heap, Heapsort`
 ### 2. **`Graph``**
   * `Graph (representation through adjacency list)`
+  * `BFS Implemented`

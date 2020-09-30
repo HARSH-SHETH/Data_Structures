@@ -1,5 +1,10 @@
 #include <iostream>
+#include "queue.h"
 #define MAXNODE 100
+#define UNDISCOVERED -1
+#define DISCOVERED    0 
+#define PROCESSED     1 
+#define NOPARENT     -1 
 using namespace std;
 
 struct edgenode{
@@ -44,7 +49,7 @@ void insert_edge(graph *g, int x, int y, bool directed, int weight=0){
 
 void build_graph(graph *g, bool directed){
   int n, m;
-  int x, y;
+  char x, y;
   initialize_graph(g, directed);
   cout << "Enter no. of vertices and edges: ";
   cin >> n >> m;
@@ -55,13 +60,13 @@ void build_graph(graph *g, bool directed){
     cin >> x;
     cout << "Destination vertex: ";
     cin >> y;
-    insert_edge(g, x, y, directed);
+    insert_edge(g, ctoi(x) , ctoi(y), directed);
   }
   return;
 }
 
 void print_graph(graph *g){
-  cout << "\n********************************";
+  prettify();
   edgenode *ptr = new edgenode;
   for(int i = 0; i < g->nvertices; i++){
     cout << "\nEdgelist of node "; putchar(i + 'A'); cout << ": ";
@@ -71,17 +76,62 @@ void print_graph(graph *g){
       ptr = ptr->next;
     }
   }
-  cout << "\n********************************";
+  prettify();
+  return;
+}
+
+// BFS of graph
+void bfs(graph *g, int source){
+  if(source < 0 || source > g->nvertices) {
+    cout << "wrong input";
+    exit(-1);
+  }
+  int *state = new int[g->nvertices];
+  int *parent = new int[g->nvertices];
+  for(int i = 0; i < g->nvertices; i++) {
+    state[i] = UNDISCOVERED;  // initially every node is undiscovered
+    parent[i] = NOPARENT;
+  }
+  state[source] = 0;  // DISCOVERED
+  Enqueue(source);
+  int vertex;
+  while((vertex = Dequeue()) != -1){
+    cout << "\nCurrent Vertex is: " << itoc(vertex);
+    edgenode *ptr = g->edges[vertex];
+    while(ptr != NULL){
+      if(state[ptr->adj] == UNDISCOVERED){
+        cout << "\n-> \tcurrent edges is: {" << itoc(vertex) << ", " << itoc(ptr->adj) << "}";
+        state[ptr->adj] = DISCOVERED;
+        parent[ptr->adj] = vertex;
+        Enqueue(ptr->adj);
+      }
+      ptr = ptr->next;
+    }
+    state[vertex] = PROCESSED;
+  }
+  prettify();
+  for(int i = 0; i < g->nvertices; i++){
+    cout << "\nParent of vertex: " << itoc(i) << "is: " << itoc(parent[i]);
+  }
   return;
 }
 
 int main(){
   graph *new_graph = new graph;
   char ch;
+  int source;
   cout << "Press 'y' or 'n'\n";
   cout << "Is graph directed: ";
   cin >> ch;
   build_graph(new_graph, (ch == 'y') ? true : false);
   print_graph(new_graph);
+  cout << "\n Enter the source node: ";
+  cin >> ch;
+  source = ctoi(ch);
+  if(source >= new_graph->nvertices || source < 0){
+    cout << "No such node found";
+    return -1;
+  }
+  bfs(new_graph, source);
   return 0;
 }
