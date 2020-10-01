@@ -1,4 +1,5 @@
 #include <iostream>
+#include <bits/stdc++.h>
 #include "queue.h"
 #define MAXNODE 100
 #define UNDISCOVERED -1
@@ -6,6 +7,12 @@
 #define PROCESSED     1 
 #define NOPARENT     -1 
 using namespace std;
+
+int *state;
+int *parent;
+int *entry_time;
+int *exit_time;
+int dfs_time;
 
 struct edgenode{
   int adj;
@@ -82,17 +89,7 @@ void print_graph(graph *g){
 
 // BFS of graph
 void bfs(graph *g, int source){
-  if(source < 0 || source > g->nvertices) {
-    cout << "wrong input";
-    exit(-1);
-  }
-  int *state = new int[g->nvertices];
-  int *parent = new int[g->nvertices];
-  for(int i = 0; i < g->nvertices; i++) {
-    state[i] = UNDISCOVERED;  // initially every node is undiscovered
-    parent[i] = NOPARENT;
-  }
-  state[source] = 0;  // DISCOVERED
+  state[source] = DISCOVERED;  // DISCOVERED
   Enqueue(source);
   int vertex;
   while((vertex = Dequeue()) != -1){
@@ -116,6 +113,69 @@ void bfs(graph *g, int source){
   return;
 }
 
+void process_edge(int x, int y){
+  cout << "\n\t->Current edge is: " << itoc(x) << ", " << itoc(y);
+  return;
+}
+
+void initialize_arrays(graph *g){
+  for(int i = 0; i < g->nvertices; i++){
+    state[i] = UNDISCOVERED;
+    parent[i] = -1; // No Parent
+    entry_time[i] = exit_time[i] = 0;
+  }
+  dfs_time = 0;
+}
+
+// DFS of graph
+void dfs(graph *g, int source){
+  int vertex = source;
+  bool undiscovered_adj = false;  // true if node has undiscovered neighbours
+  stack<int> dfs_stack;
+  state[source] = DISCOVERED;
+  dfs_stack.push(source);
+  edgenode *ptr = new edgenode;
+  ptr = g->edges[source];
+  entry_time[source] = ++dfs_time;
+  cout << "\nCurrent Vertex is: " << itoc(vertex) << " with entry time: " << entry_time[vertex];
+  do{
+    while(ptr != NULL){
+      if(state[ptr->adj] == UNDISCOVERED){
+        process_edge(vertex, ptr->adj);
+        state[ptr->adj] = DISCOVERED;
+        entry_time[ptr->adj] = ++dfs_time;
+        parent[ptr->adj] = vertex;
+        dfs_stack.push(ptr->adj);
+        vertex = ptr->adj;
+        cout << "\nCurrent Vertex is: " << itoc(vertex) << " with entry time: " << entry_time[vertex];
+        ptr = g->edges[ptr->adj];
+      }else{
+        ptr = ptr->next;
+      }
+    }
+    ptr = g->edges[vertex = dfs_stack.top()];
+    if(exit_time[vertex] == 0){
+      edgenode *newptr = g->edges[vertex];
+      while(newptr != NULL){
+        if(state[newptr->adj] == UNDISCOVERED){
+          undiscovered_adj = true;
+          break;
+        }
+        newptr = newptr->next;
+      }
+      if(!undiscovered_adj){
+        exit_time[vertex] = ++dfs_time;
+        state[vertex] = PROCESSED;
+        cout << "\n exit time of vertex: " << itoc(vertex)<< "is: " << exit_time[vertex];
+      }
+    }
+    if(!undiscovered_adj)
+      dfs_stack.pop();
+    undiscovered_adj = false;
+  }while(!dfs_stack.empty());
+  return;
+}
+
 int main(){
   graph *new_graph = new graph;
   char ch;
@@ -132,6 +192,25 @@ int main(){
     cout << "No such node found";
     return -1;
   }
+  state = new int[new_graph->nvertices];
+  parent = new int[new_graph->nvertices];
+  entry_time = new int[new_graph->nvertices];
+  exit_time = new int[new_graph->nvertices];
+  // BFS 
+  initialize_arrays(new_graph);
   bfs(new_graph, source);
+  for(int i = 0; i < new_graph->nvertices; i++){
+    if(state[i] == UNDISCOVERED){
+      bfs(new_graph, i);
+    }
+  }
+  // DFS
+  initialize_arrays(new_graph);
+  dfs(new_graph, source);
+  for(int i = 0; i < new_graph->nvertices; i++){
+    if(state[i] == UNDISCOVERED){
+      dfs(new_graph, i);
+    }  
+  }
   return 0;
 }
