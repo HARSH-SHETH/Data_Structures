@@ -92,3 +92,12 @@ void Graph::bfs_graph(int source){
   }
   return;
 }
+
+void Graph::find_path(int endpoint){
+  if(parent[endpoint] == -1){
+    printf("%c", itoc(endpoint));
+  }else{
+    find_path(parent[endpoint]);
+    printf("->%c", itoc(endpoint));
+  }
+}

@@ -29,6 +29,7 @@ class Graph{
     void process_vertex_early(int);
     void process_edge(int, int);
     void process_vertex_late(int);
+    void find_path(int);  // FIND PATH FROM THE ENDPOINT TO THE ROOT OF THE BFS TREE
 };
 
 void Graph::process_vertex_early(int vertex){
