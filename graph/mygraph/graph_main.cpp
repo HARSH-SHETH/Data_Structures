@@ -4,6 +4,8 @@ using namespace std;
 
 int main(){
   Graph G;
+  int vertex;
   graph_input(G);
+  G.bfs_graph(bfs_input(G));
   return 0;
 }

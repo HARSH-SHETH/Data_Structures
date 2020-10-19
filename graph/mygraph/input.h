@@ -36,3 +36,14 @@ void graph_input(Graph &G){
   }
   G.print_adjlist();
 }
+
+int bfs_input(Graph &G){
+  int source;
+  cout << "\n Enter Source Vertex: ";
+  cin >> source;
+  if(source > G.get_no_of_vertices() || source < 0){
+    cout << "node does not exist";
+    exit(0);
+  }
+  return source;
+}
