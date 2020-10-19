@@ -39,8 +39,10 @@ void graph_input(Graph &G){
 
 int bfs_input(Graph &G){
   int source;
+  char ch;
   cout << "\n Enter Source Vertex: ";
-  cin >> source;
+  cin >> ch;
+  source = ctoi(ch);
   if(source > G.get_no_of_vertices() || source < 0){
     cout << "node does not exist";
     exit(0);

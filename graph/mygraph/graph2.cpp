@@ -82,7 +82,7 @@ void Graph::bfs_graph(int source){
         q.NQ(e->adj);
 /*        process_edge(current_vertex, e->adj);*/
       }
-      if(state[e->adj] == DISCOVERED){
+      if(state[e->adj] == DISCOVERED || directed){
         state[e->adj] = PROCESSED;
         process_edge(current_vertex, e->adj);
       }
